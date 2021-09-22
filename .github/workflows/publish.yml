@@ -1,0 +1,33 @@
+name: "🚀 Release"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    name: 🚀 Release
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        node-version: [14.17]
+        os: [ubuntu-latest]
+
+    steps:
+      - name: 📚 Checkout
+        uses: actions/checkout@v2
+      - name: 🟩 Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: 📦 Install Dependencies
+        run: npm ci
+      - name: 🔨 Build Dist Assets
+        run: npm run build
+      - name: 🚀 Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm run semantic-release
