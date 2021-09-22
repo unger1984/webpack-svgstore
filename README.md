@@ -74,7 +74,7 @@ HTML:
 </svg>
 ```
 
-React JSX:
+JSX:
 
 ```html
 <svg>
