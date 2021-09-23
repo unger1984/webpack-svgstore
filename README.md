@@ -17,7 +17,7 @@
 </div>
 <br/>
 
-Combine svg files into one with `<symbol>` elements. Read more about this in [CSS Tricks article](http://css-tricks.com/svg-symbol-good-choice-icons/). This plugin was built for for Webpack 5. It takes some ideas from [webpack-svgstore-plugin](https://github.com/mrsum/webpack-svgstore-plugin) and [gulp-svgstore](https://www.npmjs.com/package/gulp-svgstore).
+Combine svg files into one with `<symbol>` elements. Read more about this in [CSS Tricks article](http://css-tricks.com/svg-symbol-good-choice-icons/). This plugin was built for Webpack 5. It takes some ideas from [webpack-svgstore-plugin](https://github.com/mrsum/webpack-svgstore-plugin) and [gulp-svgstore](https://www.npmjs.com/package/gulp-svgstore).
 
 ## Install
 
@@ -35,7 +35,7 @@ yarn add webpack-svgstore -D
 
 ## Usage
 
-#### 1) Require plugin in your webpack.config.js file
+#### 1) Require the plugin in your webpack.config.js file
 
 ```javascript
 //webpack.config.js
@@ -45,23 +45,20 @@ module.exports = {
   plugins: [
     // create svgStore instance object
     new SvgStore({
+      path: path.resolve(__dirname, "assets/svg/**/*.svg"),
+      fileName: "svg-sprites.svg",
       prefix: "icon-",
     }),
   ],
 };
 ```
 
-#### 2) Put function mark at your chunk
+#### 2) Add the sprites loader in your chunk
 
 ```javascript
-// The plugin will find __SVGSTORE__ and build the sprites file
-const __SVGSTORE__ = {
-  path: "./assets/svg/**/*.svg",
-  name: "assets/svg/[hash].svgsheet.svg",
-};
+import svgxhr from "webpack-svgstore/dist/helpers/svgxhr";
 
-// Add this line if you want to automatically load your sprites in your HTML
-require("webpack-svgstore/dist/helpers/svgxhr")(__SVGSTORE__);
+svgxhr("svg-sprites.svg");
 ```
 
 #### 3) HTML code for using your icons
@@ -82,22 +79,15 @@ JSX:
 </svg>
 ```
 
-## Options
+## Plugin Options
 
-#### Plugin Options
-
-|        Name         |     Type      | Default | Description                                                                                                                  |
-| :-----------------: | :-----------: | :-----: | :--------------------------------------------------------------------------------------------------------------------------- |
-|   **`inlineSvg`**   | _`{Boolean}`_ | `false` | This option determines if the output should only contain the `<svg>` element without `<?xml ?>` and `DOCTYPE` to use inline. |
-| **`removeViewBox`** | _`{Boolean}`_ | `false` | Allows removing the viewBox attribute from each element.                                                                     |
-|    **`prefix`**     | _`{String}`_  | `icon-` | This option determines the prefix of each symbol's id .                                                                      |
-
-#### `__SVGSTORE__` Options
-
-|    Name    |     Type     |       Default       | Description                                                                                                  |
-| :--------: | :----------: | :-----------------: | :----------------------------------------------------------------------------------------------------------- |
-| **`path`** | _`{String}`_ |     `/**/*.svg`     | This option determines the glob pattern for the svg files that are going to be included in the sprites file. |
-| **`name`** | _`{String}`_ | `[hash].sprite.svg` | This option determines the name of the resulting sprites file.                                               |
+|        Name         |     Type      |       Default       | Description                                                                                                                  |
+| :-----------------: | :-----------: | :-----------------: | :--------------------------------------------------------------------------------------------------------------------------- |
+|     **`path`**      | _`{String}`_  |     `/**/*.svg`     | This option determines the path to the svg files that are going to be included in the sprites file.                          |
+|   **`fileName`**    | _`{String}`_  | `[hash].sprite.svg` | This option determines the name of the resulting sprites file.                                                               |
+|   **`inlineSvg`**   | _`{Boolean}`_ |       `false`       | This option determines if the output should only contain the `<svg>` element without `<?xml ?>` and `DOCTYPE` to use inline. |
+| **`removeViewBox`** | _`{Boolean}`_ |       `false`       | Allows removing the viewBox attribute from each element.                                                                     |
+|    **`prefix`**     | _`{String}`_  |       `icon-`       | This option determines the prefix of each symbol's id .                                                                      |
 
 ## License
 

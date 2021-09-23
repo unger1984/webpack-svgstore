@@ -12,5 +12,10 @@ module.exports = {
   resolve: {
     extensions: [".js"],
   },
-  plugins: [new WebpackSvgStore()],
+  plugins: [
+    new WebpackSvgStore({
+      path: path.resolve(__dirname, "example/static/svg/**/*.svg"),
+      fileName: "svg-sprites.svg",
+    }),
+  ],
 };

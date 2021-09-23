@@ -1,11 +1,16 @@
+import fs from "fs";
 import path from "path";
 import { validate } from "schema-utils";
+import { optimize } from "svgo";
+import cheerio from "cheerio";
+import globby from "globby";
 import ConstDependency from "webpack/lib/dependencies/ConstDependency";
 import NullFactory from "webpack/lib/NullFactory";
-import { filesMapSync, parseFiles, hash, hashByString } from "./helpers/utils";
 
 // schema for options object
 const schema = {
+  path: "string",
+  fileName: "string",
   inlineSvg: "boolean",
   removeViewBox: "boolean",
   prefix: "string",
@@ -13,6 +18,8 @@ const schema = {
 
 // Defaults
 const defaults = {
+  path: "/**/*.svg",
+  fileName: "svg-sprites.svg",
   inlineSvg: false,
   removeViewBox: false,
   prefix: "",
@@ -38,38 +45,95 @@ class WebpackSvgStore {
         })();
   }
 
-  createTaskContext(expr, parser) {
-    const { current } = parser.state;
+  minify(file, removeViewBox) {
+    const plugins = [
+      { name: "removeTitle" },
+      { name: "collapseGroups" },
+      { name: "inlineStyles" },
+      { name: "convertStyleToAttrs" },
+      { name: "cleanupIDs" },
+    ];
 
-    const data = {
-      path: "/**/*.svg",
-      fileName: "[hash].sprite.svg",
-      context: current.context,
-    };
+    if (removeViewBox) {
+      plugins.push({ name: "removeViewBox" });
+    }
 
-    expr.init.properties.forEach((prop) => {
-      switch (prop.key.name) {
-        case "name":
-          data.fileName = prop.value.value;
-          break;
-        case "path":
-          data.path = prop.value.value;
-          break;
-        default:
-          break;
+    const result = optimize(file, { plugins });
+
+    return result.data;
+  }
+
+  convertFilenameToId(filename, prefix) {
+    return prefix + filename.split(".").join("-").toLowerCase();
+  }
+
+  /**
+   * [parseFiles description]
+   * @return {[type]} [description]
+   */
+  parseFiles(files, options) {
+    let resultSvg =
+      '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><defs/></svg>';
+    if (!options.inlineSvg) {
+      resultSvg =
+        '<?xml version="1.0" encoding="UTF-8"?>' +
+        '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" ' +
+        '"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">' +
+        resultSvg;
+    }
+
+    const $ = cheerio.load(resultSvg, { xmlMode: true });
+    const $combinedSvg = $("svg");
+    const $combinedDefs = $("defs");
+
+    files.forEach((file) => {
+      // load and minify
+      const buffer = this.minify(
+        fs.readFileSync(file, "utf8"),
+        options.removeViewBox
+      );
+
+      // get filename for id generation
+      const filename = path.basename(file, ".svg");
+
+      const $svg = cheerio.load(buffer.toString(), { xmlMode: true })("svg");
+
+      if ($svg.length === 0) return;
+
+      const idAttr = this.convertFilenameToId(filename, options.prefix);
+      const viewBoxAttr = $svg.attr("viewBox");
+      const preserveAspectRatioAttr = $svg.attr("preserveAspectRatio");
+      const $symbol = $("<symbol/>");
+
+      $symbol.attr("id", idAttr);
+      if (viewBoxAttr) {
+        $symbol.attr("viewBox", viewBoxAttr);
       }
+      if (preserveAspectRatioAttr) {
+        $symbol.attr("preserveAspectRatio", preserveAspectRatioAttr);
+      }
+
+      const $defs = $svg.find("defs");
+      if ($defs.length > 0) {
+        $combinedDefs.append($defs.contents());
+        $defs.remove();
+      }
+
+      $symbol.append($svg.contents());
+      $combinedSvg.append($symbol);
     });
 
-    const files = filesMapSync(path.join(data.context, data.path || ""));
+    return $.xml();
+  }
 
-    data.fileContent = parseFiles(files, this.options);
-    data.fileName = hash(data.fileName, hashByString(data.fileContent));
+  createTaskContext() {
+    const files = globby.sync(this.options.path);
+    const fileContent = this.parseFiles(files, this.options);
 
-    let replacement = `${expr.id.name} = { filename: "${this.options.publicPath}${data.fileName}" }`;
-    let dep = new ConstDependency(replacement, expr.range);
-    dep.loc = expr.loc;
-    current.addDependency(dep);
-    this.addTask(current.request, data);
+    this.addTask(this.options.path, {
+      fileContent,
+      fileName: this.options.fileName,
+    });
   }
 
   getPublicPath(compilation) {
@@ -97,8 +161,10 @@ class WebpackSvgStore {
   }
 
   apply(compiler) {
-    const { webpack } = compiler;
-    const { RawSource } = webpack.sources;
+    const {
+      webpack: { sources, Compilation },
+    } = compiler;
+    const { RawSource } = sources;
 
     compiler.hooks.thisCompilation.tap("WebpackSvgStore", (compilation) => {
       this.options.publicPath = this.getPublicPath(compilation);
@@ -109,10 +175,12 @@ class WebpackSvgStore {
         new ConstDependency.Template()
       );
 
+      this.createTaskContext();
+
       compilation.hooks.processAssets.tap(
         {
           name: "WebpackSvgStore",
-          stage: compilation.PROCESS_ASSETS_STAGE_SUMMARIZE,
+          stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL,
         },
         () => {
           Object.keys(this.tasks).map(async (key) => {
@@ -125,21 +193,6 @@ class WebpackSvgStore {
           });
         }
       );
-    });
-
-    compiler.hooks.normalModuleFactory.tap("WebpackSvgStore", (factory) => {
-      factory.hooks.parser
-        .for("javascript/auto")
-        .tap("WebpackSvgStore", (parser) => {
-          parser.hooks.statement.tap("WebpackSvgStore", (expr) => {
-            if (!expr.declarations || !expr.declarations.length) return;
-            const thisExpr = expr.declarations[0];
-
-            if (thisExpr.id.name === "__SVGSTORE__") {
-              this.createTaskContext(thisExpr, parser);
-            }
-          });
-        });
     });
 
     compiler.hooks.done.tap("WebpackSvgStore", () => {

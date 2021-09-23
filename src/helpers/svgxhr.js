@@ -1,10 +1,7 @@
-const svgXHR = (options) => {
-  let url = false;
+const svgXHR = (filename) => {
   let baseUrl = undefined;
 
-  options && options.filename ? (url = options.filename) : null;
-
-  if (!url) return false;
+  if (!filename) return false;
   let _ajax = new XMLHttpRequest();
   let _fullPath;
 
@@ -24,7 +21,7 @@ const svgXHR = (options) => {
     }
   }
 
-  _fullPath = `${baseUrl}/${url}`.replace(/([^:]\/)\/+/g, "$1");
+  _fullPath = `${baseUrl}/${filename}`.replace(/([^:]\/)\/+/g, "$1");
   _ajax.open("GET", _fullPath, true);
   _ajax.onprogress = () => {};
   _ajax.onload = () => {
