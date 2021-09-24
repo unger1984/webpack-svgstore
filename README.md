@@ -81,13 +81,13 @@ JSX:
 
 ## Plugin Options
 
-|        Name         |     Type      |       Default       | Description                                                                                                                  |
-| :-----------------: | :-----------: | :-----------------: | :--------------------------------------------------------------------------------------------------------------------------- |
-|     **`path`**      | _`{String}`_  |     `/**/*.svg`     | This option determines the path to the svg files that are going to be included in the sprites file.                          |
-|   **`fileName`**    | _`{String}`_  | `[hash].sprite.svg` | This option determines the name of the resulting sprites file.                                                               |
-|   **`inlineSvg`**   | _`{Boolean}`_ |       `false`       | This option determines if the output should only contain the `<svg>` element without `<?xml ?>` and `DOCTYPE` to use inline. |
-| **`removeViewBox`** | _`{Boolean}`_ |       `false`       | Allows removing the viewBox attribute from each element.                                                                     |
-|    **`prefix`**     | _`{String}`_  |       `icon-`       | This option determines the prefix of each symbol's id .                                                                      |
+|        Name         |     Type      |      Default      | Description                                                                                                                  |
+| :-----------------: | :-----------: | :---------------: | :--------------------------------------------------------------------------------------------------------------------------- |
+|     **`path`**      | _`{String}`_  |    `/**/*.svg`    | This option determines the path to the svg files that are going to be included in the sprites file.                          |
+|   **`fileName`**    | _`{String}`_  | `svg-sprites.svg` | This option determines the name of the resulting sprites file.                                                               |
+|   **`inlineSvg`**   | _`{Boolean}`_ |      `false`      | This option determines if the output should only contain the `<svg>` element without `<?xml ?>` and `DOCTYPE` to use inline. |
+| **`removeViewBox`** | _`{Boolean}`_ |      `false`      | Allows removing the viewBox attribute from each element.                                                                     |
+|    **`prefix`**     | _`{String}`_  |      `icon-`      | This option determines the prefix of each symbol's id .                                                                      |
 
 ## License
 
