@@ -4,7 +4,7 @@
   "description": "Svgstore plugin for Webpack 5",
   "main": "dist/svgstore.js",
   "engines": {
-    "node": ">= 14.17.0"
+    "node": ">= 14.0.0"
   },
   "scripts": {
     "example": "npm run build && webpack --progress --color",

@@ -24,13 +24,13 @@ Combine svg files into one with `<symbol>` elements. Read more about this in [CS
 Using npm:
 
 ```bash
-npm i webpack-svgstore --save-dev
+npm i webpack-svgstore
 ```
 
 Using yarn:
 
 ```bash
-yarn add webpack-svgstore -D
+yarn add webpack-svgstore
 ```
 
 ## Usage
