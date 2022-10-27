@@ -1,11 +1,12 @@
 import fs from "fs";
 import path from "path";
 import { validate } from "schema-utils";
-import { optimize } from "svgo";
+import { optimize, OptimizedSvg, Plugin } from "svgo";
 import cheerio from "cheerio";
 import globby from "globby";
 import ConstDependency from "webpack/lib/dependencies/ConstDependency";
 import NullFactory from "webpack/lib/NullFactory";
+import { Compilation, Compiler } from "webpack";
 
 // schema for options object
 const schema = {
@@ -23,12 +24,28 @@ const defaults = {
   inlineSvg: false,
   removeViewBox: false,
   prefix: "",
+  publicPath: "",
 };
 
+type WebpackSvgStoreOptions = {
+  path?: string;
+  fileName?: string;
+  inlineSvg?: boolean;
+  removeViewBox?: boolean;
+  prefix?: string;
+  publicPath?: string;
+};
+
+type TaskValue = { fileContent: string; fileName: string };
+
 class WebpackSvgStore {
-  constructor(options = {}) {
-    this.tasks = {};
-    this.options = { ...defaults, ...options };
+  options: Required<WebpackSvgStoreOptions> = defaults;
+
+  constructor(
+    options: WebpackSvgStoreOptions = {},
+    private tasks: { [key: string]: TaskValue[] } = {}
+  ) {
+    this.options = { ...this.options, ...options };
 
     validate(schema, this.options, {
       name: "WebpackSvgStore",
@@ -36,7 +53,7 @@ class WebpackSvgStore {
     });
   }
 
-  addTask(file, value) {
+  addTask(file: string, value: TaskValue) {
     this.tasks[file]
       ? this.tasks[file].push(value)
       : (() => {
@@ -45,8 +62,8 @@ class WebpackSvgStore {
         })();
   }
 
-  minify(file, removeViewBox) {
-    const plugins = [
+  minify(file: string, removeViewBox: boolean) {
+    const plugins: Plugin[] = [
       { name: "removeTitle" },
       { name: "collapseGroups" },
       { name: "inlineStyles" },
@@ -58,12 +75,12 @@ class WebpackSvgStore {
       plugins.push({ name: "removeViewBox" });
     }
 
-    const result = optimize(file, { plugins });
+    const result = optimize(file, { plugins }) as OptimizedSvg;
 
     return result.data;
   }
 
-  convertFilenameToId(filename, prefix) {
+  convertFilenameToId(filename: string, prefix: string) {
     return prefix + filename.split(".").join("-").toLowerCase();
   }
 
@@ -71,7 +88,7 @@ class WebpackSvgStore {
    * [parseFiles description]
    * @return {[type]} [description]
    */
-  parseFiles(files, options) {
+  parseFiles(files: string[], options: Required<WebpackSvgStoreOptions>) {
     let resultSvg =
       '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><defs/></svg>';
     if (!options.inlineSvg) {
@@ -100,7 +117,7 @@ class WebpackSvgStore {
 
       if ($svg.length === 0) return;
 
-      const idAttr = this.convertFilenameToId(filename, options.prefix);
+      const idAttr = this.convertFilenameToId(filename, `${options.prefix}`);
       const viewBoxAttr = $svg.attr("viewBox");
       const preserveAspectRatioAttr = $svg.attr("preserveAspectRatio");
       const $symbol = $("<symbol/>");
@@ -136,9 +153,9 @@ class WebpackSvgStore {
     });
   }
 
-  getPublicPath(compilation) {
+  getPublicPath(compilation: Compilation) {
     const webpackPublicPath = compilation.getAssetPath(
-      compilation.outputOptions.publicPath,
+      compilation.outputOptions.publicPath as string,
       { hash: compilation.hash }
     );
 
@@ -147,8 +164,8 @@ class WebpackSvgStore {
         ? webpackPublicPath
         : path
             .relative(
-              path.resolve(compilation.options.output.path),
-              compilation.options.output.path
+              path.resolve(compilation.options.output.path as string),
+              compilation.options.output.path as string
             )
             .split(path.sep)
             .join("/");
@@ -160,7 +177,7 @@ class WebpackSvgStore {
     return publicPath;
   }
 
-  apply(compiler) {
+  apply(compiler: Compiler) {
     const {
       webpack: { sources, Compilation },
     } = compiler;

@@ -1,13 +1,9 @@
-const svgXHR = (filename) => {
+const svgXHR = (filename: string) => {
   let baseUrl = undefined;
 
   if (!filename) return false;
   let _ajax = new XMLHttpRequest();
   let _fullPath;
-
-  if (typeof XDomainRequest !== "undefined") {
-    _ajax = new XDomainRequest();
-  }
 
   if (typeof baseUrl === "undefined") {
     if (typeof window.baseUrl !== "undefined") {
@@ -48,11 +44,8 @@ const svgXHR = (filename) => {
  * @param {Function} fn
  * @return void
  */
-function domready(callback) {
-  if (
-    document.readyState === "complete" ||
-    (document.readyState !== "loading" && !document.documentElement.doScroll)
-  ) {
+function domready(callback: () => void) {
+  if (document.readyState !== "loading") {
     callback();
   } else {
     document.addEventListener("DOMContentLoaded", callback);
