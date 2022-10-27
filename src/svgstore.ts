@@ -38,12 +38,17 @@ type WebpackSvgStoreOptions = {
 
 type TaskValue = { fileContent: string; fileName: string };
 
-class WebpackSvgStore {
+interface IWebpackSvgStore {
+  options: WebpackSvgStoreOptions;
+  tasks: { [file: string]: TaskValue[] };
+}
+
+class WebpackSvgStore implements IWebpackSvgStore {
   options: Required<WebpackSvgStoreOptions> = defaults;
 
   constructor(
     options: WebpackSvgStoreOptions = {},
-    private tasks: { [key: string]: TaskValue[] } = {}
+    public tasks: { [key: string]: TaskValue[] } = {}
   ) {
     this.options = { ...this.options, ...options };
 
@@ -218,4 +223,4 @@ class WebpackSvgStore {
   }
 }
 
-module.exports = WebpackSvgStore;
+export = WebpackSvgStore;
