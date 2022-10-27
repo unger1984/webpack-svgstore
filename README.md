@@ -53,7 +53,7 @@ module.exports = {
 };
 ```
 
-#### 2) Add the sprites loader in your chunk
+#### 2) Add the sprites loader in your code
 
 ```javascript
 import svgxhr from "webpack-svgstore/dist/helpers/svgxhr";
