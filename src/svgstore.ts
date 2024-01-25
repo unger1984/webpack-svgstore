@@ -149,7 +149,7 @@ class WebpackSvgStore implements IWebpackSvgStore {
   }
 
   createTaskContext() {
-    const files = globby.sync(this.options.path.replace(/\\/g, "/"));
+    const files = globby.sync(this.options.path);
     const fileContent = this.parseFiles(files, this.options);
 
     this.addTask(this.options.path, {
