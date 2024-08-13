@@ -1,6 +1,6 @@
 {
   "name": "webpack-svgstore",
-  "version": "0.0.2-development",
+  "version": "0.0.3-development",
   "description": "Svgstore plugin for Webpack 5",
   "main": "dist/svgstore.js",
   "engines": {
@@ -11,7 +11,8 @@
     "build": "tsc",
     "commit": "git-cz",
     "semantic-release": "semantic-release",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "install": "npm run build"
   },
   "author": "David Bergmann",
   "license": "MIT",
