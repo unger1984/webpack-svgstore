@@ -1,6 +1,6 @@
 {
   "name": "webpack-svgstore",
-  "version": "0.0.0-development",
+  "version": "0.0.1-development",
   "description": "Svgstore plugin for Webpack 5",
   "main": "dist/svgstore.js",
   "engines": {
@@ -22,7 +22,7 @@
     "webpack": "^5.0.0"
   },
   "dependencies": {
-    "cheerio": "^1.0.0-rc.12",
+    "cheerio": "^1.0.0",
     "globby": "^11.0.3",
     "schema-utils": "^4.0.0",
     "svgo": "^2.8.0"

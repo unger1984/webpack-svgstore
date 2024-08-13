@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import { validate } from "schema-utils";
 import { optimize, OptimizedSvg, Plugin } from "svgo";
-import cheerio from "cheerio";
+import * as cheerio from 'cheerio';
 import globby from "globby";
 import ConstDependency from "webpack/lib/dependencies/ConstDependency";
 import NullFactory from "webpack/lib/NullFactory";
