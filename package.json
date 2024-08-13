@@ -10,7 +10,8 @@
     "example": "npm run build && webpack --progress --color",
     "build": "tsc",
     "commit": "git-cz",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "prepack": "npm run build"
   },
   "author": "David Bergmann",
   "license": "MIT",
