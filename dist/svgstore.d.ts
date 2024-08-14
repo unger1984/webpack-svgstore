@@ -1,5 +1,5 @@
 import { Compilation, Compiler } from "webpack";
-declare type WebpackSvgStoreOptions = {
+type WebpackSvgStoreOptions = {
     path?: string;
     fileName?: string;
     inlineSvg?: boolean;
@@ -7,7 +7,7 @@ declare type WebpackSvgStoreOptions = {
     prefix?: string;
     publicPath?: string;
 };
-declare type TaskValue = {
+type TaskValue = {
     fileContent: string;
     fileName: string;
 };

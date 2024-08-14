@@ -1,42 +1,44 @@
 {
-  "name": "webpack-svgstore",
-  "version": "0.0.3-development",
+  "name": "@unger1984/webpack-svgstore",
+  "version": "0.1.0",
   "description": "Svgstore plugin for Webpack 5",
   "main": "dist/svgstore.js",
   "engines": {
-    "node": ">= 18.0.0"
+    "node": ">= 22.1.0"
   },
   "scripts": {
     "example": "npm run build && webpack --progress --color",
     "build": "tsc",
     "commit": "git-cz",
     "semantic-release": "semantic-release",
-    "prepack": "npm run build",
-    "install": "npm run build"
+    "test": "exit 0"
+  },
+  "publishConfig": {
+    "@unger1984:registry": "https://npm.pkg.github.com"
   },
   "author": "David Bergmann",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/davidbepa/webpack-svgstore"
+    "url": "https://github.com/unger1984/webpack-svgstore"
   },
   "peerDependencies": {
-    "webpack": "^5.0.0"
+    "webpack": "^5.93.0"
   },
   "dependencies": {
     "cheerio": "^1.0.0",
-    "globby": "^11.0.3",
-    "schema-utils": "^4.0.0",
+    "globby": "^11.1.0",
+    "schema-utils": "^4.2.0",
     "svgo": "^2.8.0"
   },
   "devDependencies": {
     "@types/svgo": "^2.6.4",
-    "@types/webpack": "^5.28.0",
+    "@types/webpack": "^5.28.5",
     "cz-conventional-changelog": "^3.3.0",
-    "semantic-release": "^19.0.5",
-    "typescript": "^4.8.4",
-    "webpack": "^5.74.0",
-    "webpack-cli": "^4.10.0"
+    "semantic-release": "^24.0.0",
+    "typescript": "^5.5.4",
+    "webpack": "^5.93.0",
+    "webpack-cli": "^5.1.4"
   },
   "keywords": [
     "webpack",

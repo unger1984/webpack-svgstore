@@ -1,25 +1,33 @@
-image: tetraweb/php
+name: Node.js Package
 
-cache:
-  untracked: true
-  paths:
-    - public_html/
-    - node_modules/
+on:
+  release:
+    types: [created]
 
-before_script:
-  - apt-get update
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm test
 
-stages:
-  - build
-  - test
-  - deploy
-
-build_product:
-  stage: build
-  script:
-    - npm run build
-
-deploy_product:
-  stage: deploy
-  script:
-    - npm run deploy
+  publish-gpr:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://npm.pkg.github.com/
+      - run: npm ci
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
