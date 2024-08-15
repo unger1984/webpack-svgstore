@@ -1,9 +1,4 @@
-[![npm][npm]][npm-url]
-[![node][node]][node-url]
-[![install size][size]][size-url]
-[![semantic-release][semantic-release]][semantic-release-url]
-
-# webpack-svgstore
+# @unger1984/webpack-svgstore
 
 <br/>
 <div align="center">
@@ -17,20 +12,20 @@
 </div>
 <br/>
 
+This package is a modification of the original package from [David Bergmann](https://github.com/davidbepa/webpack-svgstore)
+
 Combine svg files into one with `<symbol>` elements. Read more about this in [CSS Tricks article](http://css-tricks.com/svg-symbol-good-choice-icons/). This plugin was built for Webpack 5. It takes some ideas from [webpack-svgstore-plugin](https://github.com/mrsum/webpack-svgstore-plugin) and [gulp-svgstore](https://www.npmjs.com/package/gulp-svgstore).
 
 ## Install
 
-Using npm:
+Create a file ```.npmrc``` containing this line:
 
-```bash
-npm i webpack-svgstore
+```shell
+@unger1984:registry=https://npm.pkg.github.com
 ```
 
-Using yarn:
-
 ```bash
-yarn add webpack-svgstore
+npm i -D @unger1984/webpack-svgstore
 ```
 
 ## Usage
@@ -39,7 +34,7 @@ yarn add webpack-svgstore
 
 ```javascript
 //webpack.config.js
-const SvgStore = require("webpack-svgstore");
+const SvgStore = require("@unger1984/webpack-svgstore");
 
 module.exports = {
   plugins: [
@@ -56,7 +51,7 @@ module.exports = {
 #### 2) Add the sprites loader in your code
 
 ```javascript
-import svgxhr from "webpack-svgstore/dist/helpers/svgxhr";
+import svgxhr from "@unger1984/webpack-svgstore/dist/helpers/svgxhr";
 
 svgxhr("svg-sprites.svg");
 ```
@@ -91,15 +86,6 @@ JSX:
 
 ## License
 
-NPM package available here: [webpack-svgstore](https://www.npmjs.com/package/webpack-svgstore)
+NPM package available here: [webpack-svgstore](https://github.com/users/unger1984/packages/npm/package/webpack-svgstore)
 
-MIT © [David Bergmann](http://davidbergmann.com/)
-
-[npm]: https://img.shields.io/npm/v/webpack-svgstore.svg
-[npm-url]: https://npmjs.com/package/webpack-svgstore
-[node]: https://img.shields.io/node/v/webpack-svgstore.svg
-[node-url]: https://nodejs.org
-[size]: https://packagephobia.now.sh/badge?p=webpack-svgstore
-[size-url]: https://packagephobia.now.sh/result?p=webpack-svgstore
-[semantic-release]: https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
-[semantic-release-url]: https://github.com/semantic-release/semantic-release
+MIT © [Unger Andrey](http://unger1984.pro/)

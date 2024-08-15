@@ -14,13 +14,13 @@
     "test": "exit 0"
   },
   "publishConfig": {
-    "@unger1984:registry": "https://npm.pkg.github.com"
+    "@unger1984:registry": "https://npm.pkg.github.com/unger1984"
   },
-  "author": "David Bergmann",
+  "author": "Unger Andrey",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/unger1984/webpack-svgstore"
+    "url": "git+https://github.com/unger1984/webpack-svgstore.git"
   },
   "peerDependencies": {
     "webpack": "^5.93.0"
