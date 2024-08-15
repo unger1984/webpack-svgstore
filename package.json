@@ -13,9 +13,6 @@
     "semantic-release": "semantic-release",
     "test": "exit 0"
   },
-  "publishConfig": {
-    "@unger1984:registry": "https://npm.pkg.github.com/unger1984"
-  },
   "author": "Unger Andrey",
   "license": "MIT",
   "repository": {

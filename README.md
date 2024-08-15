@@ -1,3 +1,7 @@
+[![npm][npm]][npm-url]
+[![node][node]][node-url]
+[![install size][size]][size-url]
+
 # @unger1984/webpack-svgstore
 
 <br/>
@@ -17,12 +21,6 @@ This package is a modification of the original package from [David Bergmann](htt
 Combine svg files into one with `<symbol>` elements. Read more about this in [CSS Tricks article](http://css-tricks.com/svg-symbol-good-choice-icons/). This plugin was built for Webpack 5. It takes some ideas from [webpack-svgstore-plugin](https://github.com/mrsum/webpack-svgstore-plugin) and [gulp-svgstore](https://www.npmjs.com/package/gulp-svgstore).
 
 ## Install
-
-Create a file ```.npmrc``` containing this line:
-
-```shell
-@unger1984:registry=https://npm.pkg.github.com
-```
 
 ```bash
 npm i -D @unger1984/webpack-svgstore
@@ -89,3 +87,11 @@ JSX:
 NPM package available here: [webpack-svgstore](https://github.com/users/unger1984/packages/npm/package/webpack-svgstore)
 
 MIT © [Unger Andrey](http://unger1984.pro/)
+
+[npm]: https://img.shields.io/npm/v/@unger1984/webpack-svgstore.svg
+[npm-url]: https://npmjs.com/package/@unger1984/webpack-svgstore
+[node]: https://img.shields.io/node/v/@unger1984/webpack-svgstore.svg
+[node-url]: https://nodejs.org
+[size]: https://packagephobia.now.sh/badge?p=@unger1984/webpack-svgstore
+[size-url]: https://packagephobia.now.sh/result?p=@unger1984/webpack-svgstore
+[semantic-release]: https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
