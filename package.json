@@ -1,6 +1,6 @@
 {
   "name": "@unger1984/webpack-svgstore",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Svgstore plugin for Webpack 5",
   "main": "dist/svgstore.js",
   "engines": {
